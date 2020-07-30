@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:include="modules/include :: header"></head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-role-add">
+        <input name="id" id="id"  type="hidden" th:value="${id}"/>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">分配资源</label>
+            <div class="col-sm-8">
+                <div id="ResourceTrees" class="ztree"></div>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    $(function() {
+        var url = "/resource/roleResourceTreeData?id=" + $("#id").val();
+        var options = {
+            id: "ResourceTrees",
+            url: url,
+            check: { enable: true, nocheckInherit: true, chkboxType: { "Y": "ps", "N": "ps" } },
+            expandLevel: 0
+        };
+        $.tree.init(options);
+    });
+
+
+    //表单确定之后，执行这个add方法，就开始执行保存对角色所分配的资源
+    function submitHandler() {
+        if ($.validate.form()) {
+            add();
+        }
+    }
+    function add() {
+        var id = $("input[name='id']").val();
+        var resourceIds = $.tree.getCheckedNodes();
+        $.ajax({
+            cache : true,
+            type : "POST",
+            url : "/role/assign",
+            data : {
+                "id": id,
+                "menuIds": resourceIds
+            },
+            async : false,
+            error : function(request) {
+                $.modal.alertError("系统错误");
+            },
+            success : function(data) {
+                $.operate.saveSuccess(data);
+            }
+        });
+    }
+</script>
+</body>
+</html>

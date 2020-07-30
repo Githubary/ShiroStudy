@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+</head>
+<body>
+
+<h1>首页</h1>
+
+<p th:text="${msg}"></p>
+
+<div>
+    <a th:href="@{/add}">add</a>
+</div>
+
+<div>
+    <a th:href="@{/update}">update</a>
+</div>
+
+<div shiro:hasPermission="sysUser:delete">
+    <a th:href="@{/delete}">delete</a>
+</div>
+
+
+<div>
+    <a th:href="@{/logout}">logout</a>
+</div>
+
+</body>
+</html>
